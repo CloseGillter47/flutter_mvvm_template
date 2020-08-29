@@ -6,10 +6,11 @@ import 'package:stacked_services/stacked_services.dart';
 
 import '_core/locator.dart';
 import '_core/router.gr.dart';
-import 'themes/app_theme.dart';
-import 'plugins/i18n.dart';
+import 'models/app_model.dart';
 import 'views/splash/splash_view.dart';
 import 'services/cache_service.dart';
+import 'themes/app_theme.dart';
+import 'plugins/i18n.dart';
 
 class App extends StatelessWidget {
   @override
@@ -46,18 +47,32 @@ class AppViewModel extends BaseViewModel {
 
   final _i18n = I18n.delegate;
 
+  AppModel state;
+
   GeneratedLocalizationsDelegate get i18n => _i18n;
 
   Future init() async {
     /// 绑定多语言切换事件
     I18n.onLocaleChanged = _onLocaleChanged;
 
-    _cacheService.setCaches();
+    /// 读取缓存
+    _initCaches();
+  }
+
+  /// 初始化缓存
+  void _initCaches() {
+    final caches = _cacheService.getCaches<AppModel>();
+    state = AppModel.forJson(caches);
+
+    I18n.onLocaleChanged(state.language);
   }
 
   /// 多语言切换
   void _onLocaleChanged(Locale lang) {
     I18n.locale = lang;
+    state.language = lang;
+    _cacheService.setCaches(state);
+
     notifyListeners();
   }
 }
