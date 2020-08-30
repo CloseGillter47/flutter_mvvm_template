@@ -36,6 +36,7 @@ class AppThemeData extends CupertinoThemeData {
     CupertinoTextThemeData textTheme,
 
     /// 扩展属性
+    this.red,
   }) : super(
           textTheme: textTheme,
           brightness: brightness,
@@ -43,6 +44,8 @@ class AppThemeData extends CupertinoThemeData {
           barBackgroundColor: barBackgroundColor,
           scaffoldBackgroundColor: scaffoldBackgroundColor,
         );
+
+  final Color red;
 }
 
 class _InheritedAppTheme extends InheritedWidget {

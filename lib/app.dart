@@ -22,7 +22,11 @@ class App extends StatelessWidget {
       builder: (context, model, _) => CupertinoApp(
         debugShowCheckedModeBanner: false,
         home: SplashPage(),
-        theme: AppThemeData(),
+        theme: model.theme,
+        builder: (context, child) => AppTheme(
+          data: model.theme,
+          child: child,
+        ),
 
         /// 多语言配置
         locale: Locale('zh', 'CN'),
@@ -49,6 +53,8 @@ class AppViewModel extends BaseViewModel {
 
   AppModel state;
 
+  AppThemeData theme;
+
   GeneratedLocalizationsDelegate get i18n => _i18n;
 
   Future init() async {
@@ -64,7 +70,11 @@ class AppViewModel extends BaseViewModel {
     final caches = _cacheService.getCaches<AppModel>();
     state = AppModel.forJson(caches);
 
+    /// 设置多语言
     I18n.onLocaleChanged(state.language);
+
+    /// 设置主题 - 换肤功能
+    theme = AppThemeData(red: Color(0xFFFA541C));
   }
 
   /// 多语言切换
